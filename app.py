@@ -13,6 +13,10 @@ st.markdown("""
             margin-bottom: 1.5rem;
             background-color: #fafafa;
         }
+        .preview {
+            max-width: 200px;
+            margin-bottom: 1rem;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -31,9 +35,9 @@ if uploaded_files:
 
             st.markdown(f"**Creative #{i+1}: {file.name}**")
             if file.type.startswith("image"):
-                st.image(file, width=300)
+                st.image(file, width=180)
             elif file.type.startswith("video"):
-                st.video(file)
+                st.video(file, format="video/mp4")
 
             col1, col2 = st.columns(2)
             with col1:
