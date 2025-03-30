@@ -20,10 +20,14 @@ st.markdown("""
             margin-top: 2rem;
             border-top: 1px solid #ddd;
         }
-        .section-title, .creative-title, .expander-title {
+        .section-title {
             font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 1rem;
+        }
+        .expander-title {
+            font-size: 1.2rem !important;
+            font-weight: bold !important;
         }
         .error-text {
             color: red;
@@ -65,6 +69,7 @@ if uploaded_files:
         key_prefix = f"ad_{i}"
         saved_key = f"saved_{i}"
         error_key = f"error_{i}"
+        ad_name_key = f"ad_name_{i}"
 
         if key_prefix not in st.session_state:
             st.session_state[key_prefix] = True
@@ -72,14 +77,21 @@ if uploaded_files:
             st.session_state[saved_key] = False
         if error_key not in st.session_state:
             st.session_state[error_key] = ""
+        if ad_name_key not in st.session_state:
+            st.session_state[ad_name_key] = ""
 
-        ad_name = ""
+        today = datetime.date.today()
+        month_prefix = today.strftime("%b")
 
-        label_title = f"Creative #{i+1}: [{ 'Saved' if st.session_state[saved_key] else 'Not Saved' }]"
+        # Build dynamic label
+        if st.session_state[saved_key] and st.session_state[ad_name_key]:
+            label_title = f"Creative #{i+1}: {st.session_state[ad_name_key]}"
+        else:
+            label_title = f"Creative #{i+1}: [Not Saved]"
+
         with st.expander(label_title, expanded=st.session_state[key_prefix]):
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
-                st.markdown(f"<div class='creative-title'>Creative #{i+1}</div>", unsafe_allow_html=True)
                 if file.type.startswith("image"):
                     st.image(file, use_column_width=True)
                     st.markdown("**Image Hash:**")
@@ -98,8 +110,6 @@ if uploaded_files:
                 landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
                 ad_id = st.text_input("Ad Identifier", key=f"adid_{i}")
 
-                today = datetime.date.today()
-                month_prefix = today.strftime("%b")
                 ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
                 st.markdown("**Generated Ad Name**")
                 st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
@@ -123,6 +133,7 @@ if uploaded_files:
                     else:
                         st.session_state[saved_key] = True
                         st.session_state[key_prefix] = False
+                        st.session_state[ad_name_key] = ad_name
                         st.session_state[error_key] = ""
                         st.rerun()
 
