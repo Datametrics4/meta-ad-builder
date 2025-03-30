@@ -25,10 +25,6 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 1rem;
         }
-        summary {
-            font-size: 1.3rem !important;
-            font-weight: 700 !important;
-        }
         .error-text {
             color: red;
             font-size: 0.85rem;
@@ -52,18 +48,20 @@ uploaded_files = st.file_uploader("Upload your 1350/1920 images or videos:",
 
 ad_builds = []
 
-# Placeholder options
-formats = ["Image", "Short Video", "Long Video"]
-products = ["SnapMount 3", "PowerPack Mini", "TRVLR Tag", "Other"]
-offers = ["Afterpay Day", "EOFY", "Xmas Sale"]
-styles = ["UGC", "Testimonial", "Demo", "Lifestyle"]
-persons = ["Erika", "Liam", "Jess"]
-edits = ["Editor A", "Editor B"]
-landings = ["Homepage", "Product Page", "Bundle Page"]
-cta_options = ["SHOP_NOW", "LEARN_MORE", "SIGN_UP", "SUBSCRIBE", "GET_OFFER"]
-copy_lengths = ["Short", "Medium", "Long"]
-primary_copy_options = ["Primary Copy A", "Primary Copy B"]
-headline_options = ["Headline A", "Headline B"]
+# Load dropdown options from session_state or use fallback
+get_option = lambda key, default: st.session_state.get(key, default)
+
+formats = get_option("formats", ["Image", "Short Video", "Long Video"])
+products = get_option("products", ["SnapMount 3", "PowerPack Mini", "TRVLR Tag", "Other"])
+offers = get_option("offers", ["Afterpay Day", "EOFY", "Xmas Sale"])
+styles = get_option("styles", ["UGC", "Testimonial", "Demo", "Lifestyle"])
+persons = get_option("persons", ["Erika", "Liam", "Jess"])
+edits = get_option("editors", ["Editor A", "Editor B"])
+landings = get_option("landings", ["Homepage", "Product Page", "Bundle Page"])
+cta_options = get_option("cta_options", ["SHOP_NOW", "LEARN_MORE", "SIGN_UP", "SUBSCRIBE", "GET_OFFER"])
+copy_lengths = get_option("copy_lengths", ["Short", "Medium", "Long"])
+primary_copy_options = get_option("primary_copy_options", ["Primary Copy A", "Primary Copy B"])
+headline_options = get_option("headline_options", ["Headline A", "Headline B"])
 
 if uploaded_files:
     st.markdown("### 2. Ad Building")
