@@ -22,6 +22,11 @@ st.markdown("""
             font-size: 0.95rem;
             margin-bottom: 1rem;
         }
+        .section-padding {
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
         video {
             max-height: 240px;
         }
@@ -72,6 +77,7 @@ if uploaded_files:
                 today = datetime.date.today()
                 month_prefix = today.strftime("%b")
                 ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
+                st.markdown("**Generated Ad Name**")
                 st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
 
                 destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
@@ -82,11 +88,18 @@ if uploaded_files:
 
                 notes = st.text_area("Notes", key=f"notes_{i}")
 
-                st.markdown("---")
-                st.markdown("**📝 Copy Selection (Coming Soon)**")
-                st.markdown("This section will allow you to select copy based on earlier selections, filtered by:")
-                st.markdown("- Copy Length\n- Product + Offer (for Primary Copy)\n- Product + Offer (for Headline)")
-                st.markdown("Settings for this will live in a dedicated settings page.")
+                st.markdown("""
+                    <div class='section-padding'>
+                        <strong>📝 Copy Selection (Coming Soon)</strong><br><br>
+                        This section will allow you to select copy based on earlier selections, filtered by:
+                        <ul>
+                            <li>Copy Length</li>
+                            <li>Product + Offer (for Primary Copy)</li>
+                            <li>Product + Offer (for Headline)</li>
+                        </ul>
+                        Settings for this will live in a dedicated settings page.
+                    </div>
+                """, unsafe_allow_html=True)
 
                 ad_builds.append({
                     "file_name": file.name,
