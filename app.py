@@ -13,6 +13,15 @@ st.markdown("""
             margin-bottom: 1.5rem;
             background-color: #fafafa;
         }
+        .generated-name {
+            background-color: #e7f3ff;
+            border: 1px solid #cce0ff;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
         video {
             max-height: 240px;
         }
@@ -34,7 +43,6 @@ styles = ["UGC", "Testimonial", "Demo", "Lifestyle"]
 persons = ["Erika", "Liam", "Jess"]
 edits = ["Editor A", "Editor B"]
 landings = ["Homepage", "Product Page", "Bundle Page"]
-ad_ids = ["v1", "v2", "Test"]
 
 if uploaded_files:
     st.markdown("### 2. Build Ads Per Creative")
@@ -59,12 +67,12 @@ if uploaded_files:
                 person = st.selectbox("Person", persons, key=f"person_{i}")
                 editor = st.selectbox("Editor", edits, key=f"editor_{i}")
                 landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
-                ad_id = st.selectbox("Ad Identifier", ad_ids, key=f"adid_{i}")
+                ad_id = st.text_input("Ad Identifier", key=f"adid_{i}")
 
                 today = datetime.date.today()
                 month_prefix = today.strftime("%b")
                 ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
-                st.text_input("Generated Ad Name", value=ad_name, key=f"adname_{i}")
+                st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
 
                 destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
                 placement = st.multiselect("Placements", [
@@ -73,6 +81,12 @@ if uploaded_files:
                 ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
 
                 notes = st.text_area("Notes", key=f"notes_{i}")
+
+                st.markdown("---")
+                st.markdown("**📝 Copy Selection (Coming Soon)**")
+                st.markdown("This section will allow you to select copy based on earlier selections, filtered by:")
+                st.markdown("- Copy Length\n- Product + Offer (for Primary Copy)\n- Product + Offer (for Headline)")
+                st.markdown("Settings for this will live in a dedicated settings page.")
 
                 ad_builds.append({
                     "file_name": file.name,
