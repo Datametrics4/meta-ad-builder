@@ -92,7 +92,7 @@ if uploaded_files:
         else:
             expander_title = f"Creative #{i+1}: [Not Saved]"
 
-        with st.expander(expander_title, expanded=True, key=f"expander_{i}_{st.session_state[version_key]}"):
+        with st.expander(expander_title, expanded=True):
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
                 if file.type.startswith("image"):
