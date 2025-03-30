@@ -51,20 +51,15 @@ if uploaded_files:
                     st.video(file, format="video/mp4")
 
             with form_col:
-                st.markdown("**📝 Ad Naming Configuration**")
-                c1, c2, c3, c4 = st.columns(4)
-                with c1:
-                    format_type = st.selectbox("Format", formats, key=f"format_{i}")
-                    product = st.selectbox("Product", products, key=f"product_{i}")
-                with c2:
-                    offer = st.selectbox("Offer", offers, key=f"offer_{i}")
-                    content_style = st.selectbox("Content Style", styles, key=f"style_{i}")
-                with c3:
-                    person = st.selectbox("Person", persons, key=f"person_{i}")
-                    editor = st.selectbox("Editor", edits, key=f"editor_{i}")
-                with c4:
-                    landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
-                    ad_id = st.selectbox("Ad Identifier", ad_ids, key=f"adid_{i}")
+                st.markdown("**🧱 Ad Naming Config**")
+                format_type = st.selectbox("Format", formats, key=f"format_{i}")
+                product = st.selectbox("Product", products, key=f"product_{i}")
+                offer = st.selectbox("Offer", offers, key=f"offer_{i}")
+                content_style = st.selectbox("Content Style", styles, key=f"style_{i}")
+                person = st.selectbox("Person", persons, key=f"person_{i}")
+                editor = st.selectbox("Editor", edits, key=f"editor_{i}")
+                landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
+                ad_id = st.selectbox("Ad Identifier", ad_ids, key=f"adid_{i}")
 
                 today = datetime.date.today()
                 month_prefix = today.strftime("%b")
