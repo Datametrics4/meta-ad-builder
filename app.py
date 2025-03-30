@@ -48,6 +48,7 @@ styles = ["UGC", "Testimonial", "Demo", "Lifestyle"]
 persons = ["Erika", "Liam", "Jess"]
 edits = ["Editor A", "Editor B"]
 landings = ["Homepage", "Product Page", "Bundle Page"]
+cta_options = ["SHOP_NOW", "LEARN_MORE", "SIGN_UP", "SUBSCRIBE", "GET_OFFER"]
 
 if uploaded_files:
     st.markdown("### 2. Build Ads Per Creative")
@@ -80,14 +81,7 @@ if uploaded_files:
                 st.markdown("**Generated Ad Name**")
                 st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
 
-                destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
-                placement = st.multiselect("Placements", [
-                    "Facebook Feed", "Instagram Feed", "Facebook Reels", "Instagram Reels",
-                    "Facebook Story", "Instagram Story", "Messenger Story", "Audience Network"
-                ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
-
-                notes = st.text_area("Notes", key=f"notes_{i}")
-
+                # Copy Section
                 st.markdown("""
                     <div class='section-padding'>
                         <strong>📝 Copy Selection (Coming Soon)</strong><br><br>
@@ -101,6 +95,17 @@ if uploaded_files:
                     </div>
                 """, unsafe_allow_html=True)
 
+                # Ad Parameters Section
+                st.markdown("<div class='section-padding'><strong>⚙️ Ad Parameters</strong></div>", unsafe_allow_html=True)
+                cta = st.selectbox("Call to Action", cta_options, key=f"cta_{i}")
+                destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
+                placement = st.multiselect("Placements", [
+                    "Facebook Feed", "Instagram Feed", "Facebook Reels", "Instagram Reels",
+                    "Facebook Story", "Instagram Story", "Messenger Story", "Audience Network"
+                ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
+
+                notes = st.text_area("Notes", key=f"notes_{i}")
+
                 ad_builds.append({
                     "file_name": file.name,
                     "format": format_type,
@@ -112,6 +117,7 @@ if uploaded_files:
                     "landing": landing,
                     "ad_id": ad_id,
                     "ad_name": ad_name,
+                    "cta": cta,
                     "url": destination_url,
                     "placements": placement,
                     "notes": notes
