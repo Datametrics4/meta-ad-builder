@@ -1,7 +1,7 @@
 import streamlit as st
 import datetime
 
-st.set_page_config(page_title="Meta Ad Builder", layout="wide")
+st.set_page_config(page_title="Ad Builder", page_icon="🏠", layout="wide")
 st.title("Meta Ad Builder")
 
 st.markdown("""
