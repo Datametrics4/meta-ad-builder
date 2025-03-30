@@ -46,6 +46,7 @@ uploaded_files = st.file_uploader("Upload your 1350/1920 images or videos:",
                                    accept_multiple_files=True)
 
 ad_builds = []
+expanded_states = {}
 
 # Placeholder options (to be managed via settings in the future)
 formats = ["Image", "Short Video", "Long Video"]
@@ -61,78 +62,61 @@ primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
 if uploaded_files:
-    st.markdown("""
-        <div style='margin-top: 4rem'></div>
-        <h3>2. Ad Building</h3>
-    """, unsafe_allow_html=True)
+    st.markdown("### 2. Ad Building")
 
     for i, file in enumerate(uploaded_files):
+        key_prefix = f"ad_{i}"
+        if key_prefix not in st.session_state:
+            st.session_state[key_prefix] = True
+
+        ad_name_placeholder = ""
         if i > 0:
             st.markdown(f"<div class='ad-block'>", unsafe_allow_html=True)
 
-        preview_col, form_col = st.columns([1.2, 2.8])
-        with preview_col:
-            st.markdown(f"<div class='creative-title'>Creative #{i+1}:</div>", unsafe_allow_html=True)
-            if file.type.startswith("image"):
-                st.image(file, use_column_width=True)
-                st.markdown("**Image Hash:**")
-            elif file.type.startswith("video"):
-                st.video(file, format="video/mp4")
-                st.markdown("**Meta Video ID:**")
+        with st.expander(f"Creative #{i+1}: [Not Saved]", expanded=st.session_state[key_prefix]):
+            preview_col, form_col = st.columns([1.2, 2.8])
+            with preview_col:
+                if file.type.startswith("image"):
+                    st.image(file, use_column_width=True)
+                    st.markdown("**Image Hash:**")
+                elif file.type.startswith("video"):
+                    st.video(file, format="video/mp4")
+                    st.markdown("**Meta Video ID:**")
 
-        with form_col:
-            st.markdown("<div class='section-title'>Ad Naming</div>", unsafe_allow_html=True)
-            format_type = st.selectbox("Format", formats, key=f"format_{i}")
-            product = st.selectbox("Product", products, key=f"product_{i}")
-            offer = st.selectbox("Offer", offers, key=f"offer_{i}")
-            content_style = st.selectbox("Content Style", styles, key=f"style_{i}")
-            person = st.selectbox("Person", persons, key=f"person_{i}")
-            editor = st.selectbox("Editor", edits, key=f"editor_{i}")
-            landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
-            ad_id = st.text_input("Ad Identifier", key=f"adid_{i}")
+            with form_col:
+                st.markdown("<div class='section-title'>Ad Naming</div>", unsafe_allow_html=True)
+                format_type = st.selectbox("Format", formats, key=f"format_{i}")
+                product = st.selectbox("Product", products, key=f"product_{i}")
+                offer = st.selectbox("Offer", offers, key=f"offer_{i}")
+                content_style = st.selectbox("Content Style", styles, key=f"style_{i}")
+                person = st.selectbox("Person", persons, key=f"person_{i}")
+                editor = st.selectbox("Editor", edits, key=f"editor_{i}")
+                landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
+                ad_id = st.text_input("Ad Identifier", key=f"adid_{i}")
 
-            today = datetime.date.today()
-            month_prefix = today.strftime("%b")
-            ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
-            st.markdown("**Generated Ad Name**")
-            st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
+                today = datetime.date.today()
+                month_prefix = today.strftime("%b")
+                ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
+                ad_name_placeholder = ad_name
+                st.markdown("**Generated Ad Name**")
+                st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
 
-            st.markdown("<div class='section-title section-padding'>Ad Copy</div>", unsafe_allow_html=True)
-            copy_length = st.selectbox("Copy Length", copy_lengths, key=f"copylen_{i}")
-            primary_copy = st.selectbox("Primary Copy", primary_copy_options, key=f"primarycopy_{i}")
-            headline = st.selectbox("Headline", headline_options, key=f"headline_{i}")
+                st.markdown("<div class='section-title section-padding'>Ad Copy</div>", unsafe_allow_html=True)
+                copy_length = st.selectbox("Copy Length", copy_lengths, key=f"copylen_{i}")
+                primary_copy = st.selectbox("Primary Copy", primary_copy_options, key=f"primarycopy_{i}")
+                headline = st.selectbox("Headline", headline_options, key=f"headline_{i}")
 
-            st.markdown("<div class='section-title section-padding'>Ad Parameters</div>", unsafe_allow_html=True)
-            cta = st.selectbox("Call to Action", cta_options, key=f"cta_{i}")
-            destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
-            placement = st.multiselect("Placements", [
-                "Facebook Feed", "Instagram Feed", "Facebook Reels", "Instagram Reels",
-                "Facebook Story", "Instagram Story", "Messenger Story", "Audience Network"
-            ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
+                st.markdown("<div class='section-title section-padding'>Ad Parameters</div>", unsafe_allow_html=True)
+                cta = st.selectbox("Call to Action", cta_options, key=f"cta_{i}")
+                destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
+                placement = st.multiselect("Placements", [
+                    "Facebook Feed", "Instagram Feed", "Facebook Reels", "Instagram Reels",
+                    "Facebook Story", "Instagram Story", "Messenger Story", "Audience Network"
+                ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
 
-            ad_builds.append({
-                "file_name": file.name,
-                "format": format_type,
-                "product": product,
-                "offer": offer,
-                "style": content_style,
-                "person": person,
-                "editor": editor,
-                "landing": landing,
-                "ad_id": ad_id,
-                "ad_name": ad_name,
-                "cta": cta,
-                "copy_length": copy_length,
-                "primary_copy": primary_copy,
-                "headline": headline,
-                "url": destination_url,
-                "placements": placement
-            })
+                if st.button("✅ Save Ad", key=f"save_{i}"):
+                    st.session_state[key_prefix] = False
+                    st.rerun()
 
         if i > 0:
             st.markdown("</div>", unsafe_allow_html=True)
-
-# --- Summary ---
-if st.button("✅ Save All Ads"):
-    st.success("All ad builds captured (example preview below)")
-    st.json(ad_builds)
