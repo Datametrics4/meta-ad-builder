@@ -25,13 +25,19 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 1rem;
         }
-        summary {
-            font-size: 1.3rem !important;
-            font-weight: 700 !important;
+        .ad-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
         }
         .error-text {
             color: red;
             font-size: 0.85rem;
+            padding-top: 0.3rem;
+        }
+        .success-text {
+            color: green;
+            font-size: 0.9rem;
             padding-top: 0.3rem;
         }
         video, img {
@@ -46,8 +52,6 @@ st.markdown("### 1. Upload Creatives")
 uploaded_files = st.file_uploader("Upload your 1350/1920 images or videos:",
                                    type=["jpg", "jpeg", "png", "mp4", "mov"],
                                    accept_multiple_files=True)
-
-ad_builds = []
 
 # Placeholder options
 formats = ["Image", "Short Video", "Long Video"]
@@ -69,30 +73,58 @@ if uploaded_files:
         saved_key = f"saved_{i}"
         error_key = f"error_{i}"
         ad_name_key = f"ad_name_{i}"
-        version_key = f"expander_version_{i}"
+        visible_key = f"show_expander_{i}"
 
-        # Initialize state
         if saved_key not in st.session_state:
             st.session_state[saved_key] = False
         if error_key not in st.session_state:
             st.session_state[error_key] = ""
         if ad_name_key not in st.session_state:
             st.session_state[ad_name_key] = ""
-        if version_key not in st.session_state:
-            st.session_state[version_key] = 0
+        if visible_key not in st.session_state:
+            st.session_state[visible_key] = True
 
         today = datetime.date.today()
         month_prefix = today.strftime("%b")
 
-        # Title text
         if st.session_state[saved_key] and st.session_state[ad_name_key]:
-            expander_title = f"Creative #{i+1}: {st.session_state[ad_name_key]}"
+            creative_title = f"Creative #{i+1}: {st.session_state[ad_name_key]}"
         else:
-            expander_title = f"Creative #{i+1}: [Not Saved]"
+            creative_title = f"Creative #{i+1}: [Not Saved]"
 
-        expander_key = f"expander_{i}_{str(st.session_state[version_key])}"
+        st.markdown(f"<div class='ad-header'>{creative_title}</div>", unsafe_allow_html=True)
 
-        with st.expander(expander_title, expanded=True, key=expander_key):
+        col_btn1, col_btn2 = st.columns([1, 1])
+        with col_btn1:
+            if st.button(f"✅ Save Ad", key=f"save_{i}"):
+                ad_id = st.session_state.get(f"adid_{i}", "").strip()
+                if not ad_id:
+                    st.session_state[error_key] = "Ad Identifier is required."
+                else:
+                    format_type = st.session_state.get(f"format_{i}", "")
+                    product = st.session_state.get(f"product_{i}", "")
+                    offer = st.session_state.get(f"offer_{i}", "")
+                    content_style = st.session_state.get(f"style_{i}", "")
+                    person = st.session_state.get(f"person_{i}", "")
+                    editor = st.session_state.get(f"editor_{i}", "")
+                    landing = st.session_state.get(f"landing_{i}", "")
+
+                    ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
+                    st.session_state[ad_name_key] = ad_name
+                    st.session_state[saved_key] = True
+                    st.session_state[error_key] = ""
+
+        with col_btn2:
+            if st.button(f"🔽 Close Ad", key=f"close_{i}"):
+                st.session_state[visible_key] = False
+
+        if st.session_state[error_key]:
+            st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
+
+        if st.session_state[saved_key] and not st.session_state[error_key]:
+            st.markdown("<div class='success-text'>Ad saved successfully!</div>", unsafe_allow_html=True)
+
+        if st.session_state[visible_key]:
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
                 if file.type.startswith("image"):
@@ -104,43 +136,32 @@ if uploaded_files:
 
             with form_col:
                 st.markdown("<div class='section-title'>Ad Naming</div>", unsafe_allow_html=True)
-                format_type = st.selectbox("Format", formats, key=f"format_{i}")
-                product = st.selectbox("Product", products, key=f"product_{i}")
-                offer = st.selectbox("Offer", offers, key=f"offer_{i}")
-                content_style = st.selectbox("Content Style", styles, key=f"style_{i}")
-                person = st.selectbox("Person", persons, key=f"person_{i}")
-                editor = st.selectbox("Editor", edits, key=f"editor_{i}")
-                landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
-                ad_id = st.text_input("Ad Identifier", key=f"adid_{i}")
+                st.selectbox("Format", formats, key=f"format_{i}")
+                st.selectbox("Product", products, key=f"product_{i}")
+                st.selectbox("Offer", offers, key=f"offer_{i}")
+                st.selectbox("Content Style", styles, key=f"style_{i}")
+                st.selectbox("Person", persons, key=f"person_{i}")
+                st.selectbox("Editor", edits, key=f"editor_{i}")
+                st.selectbox("Landing Page", landings, key=f"landing_{i}")
+                st.text_input("Ad Identifier", key=f"adid_{i}")
 
-                ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
+                ad_id_val = st.session_state.get(f"adid_{i}", "")
+                ad_name_preview = f"{month_prefix}_{st.session_state.get(f'format_{i}', '')}_{st.session_state.get(f'product_{i}', '')}_{st.session_state.get(f'offer_{i}', '')}_{st.session_state.get(f'style_{i}', '')}_{st.session_state.get(f'person_{i}', '')}_{st.session_state.get(f'editor_{i}', '')}_{st.session_state.get(f'landing_{i}', '')}_{ad_id_val}"
+
                 st.markdown("**Generated Ad Name**")
-                st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='generated-name'>{ad_name_preview}</div>", unsafe_allow_html=True)
 
                 st.markdown("<div class='section-title section-padding'>Ad Copy</div>", unsafe_allow_html=True)
-                copy_length = st.selectbox("Copy Length", copy_lengths, key=f"copylen_{i}")
-                primary_copy = st.selectbox("Primary Copy", primary_copy_options, key=f"primarycopy_{i}")
-                headline = st.selectbox("Headline", headline_options, key=f"headline_{i}")
+                st.selectbox("Copy Length", copy_lengths, key=f"copylen_{i}")
+                st.selectbox("Primary Copy", primary_copy_options, key=f"primarycopy_{i}")
+                st.selectbox("Headline", headline_options, key=f"headline_{i}")
 
                 st.markdown("<div class='section-title section-padding'>Ad Parameters</div>", unsafe_allow_html=True)
-                cta = st.selectbox("Call to Action", cta_options, key=f"cta_{i}")
-                destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
-                placement = st.multiselect("Placements", [
+                st.selectbox("Call to Action", cta_options, key=f"cta_{i}")
+                st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
+                st.multiselect("Placements", [
                     "Facebook Feed", "Instagram Feed", "Facebook Reels", "Instagram Reels",
                     "Facebook Story", "Instagram Story", "Messenger Story", "Audience Network"
                 ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
 
-                if st.button("✅ Save Ad", key=f"save_{i}"):
-                    if ad_id.strip() == "":
-                        st.session_state[error_key] = "Ad Identifier is required."
-                    else:
-                        st.session_state[saved_key] = True
-                        st.session_state[ad_name_key] = ad_name
-                        st.session_state[error_key] = ""
-                        st.session_state[version_key] += 1
-                        st.rerun()
-
-        if st.session_state[error_key]:
-            st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
-
-        st.markdown("<div style='margin-bottom: 2.5rem;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-bottom: 3rem;'></div>", unsafe_allow_html=True)
