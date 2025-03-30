@@ -26,7 +26,7 @@ st.markdown("""
             margin-bottom: 1rem;
         }
         .expander-title {
-            font-size: 1.2rem !important;
+            font-size: 1.25rem !important;
             font-weight: bold !important;
         }
         .error-text {
@@ -71,8 +71,6 @@ if uploaded_files:
         error_key = f"error_{i}"
         ad_name_key = f"ad_name_{i}"
 
-        if key_prefix not in st.session_state:
-            st.session_state[key_prefix] = True
         if saved_key not in st.session_state:
             st.session_state[saved_key] = False
         if error_key not in st.session_state:
@@ -85,11 +83,11 @@ if uploaded_files:
 
         # Build dynamic label
         if st.session_state[saved_key] and st.session_state[ad_name_key]:
-            label_title = f"Creative #{i+1}: {st.session_state[ad_name_key]}"
+            label_title = f"<span class='expander-title'>Creative #{i+1}: {st.session_state[ad_name_key]}</span>"
         else:
-            label_title = f"Creative #{i+1}: [Not Saved]"
+            label_title = f"<span class='expander-title'>Creative #{i+1}: [Not Saved]</span>"
 
-        with st.expander(label_title, expanded=st.session_state[key_prefix]):
+        with st.expander(label_title, expanded=not st.session_state.get(f"collapsed_{i}", False)):
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
                 if file.type.startswith("image"):
@@ -132,9 +130,9 @@ if uploaded_files:
                         st.session_state[error_key] = "Ad Identifier is required."
                     else:
                         st.session_state[saved_key] = True
-                        st.session_state[key_prefix] = False
                         st.session_state[ad_name_key] = ad_name
                         st.session_state[error_key] = ""
+                        st.session_state[f"collapsed_{i}"] = True
                         st.rerun()
 
         if st.session_state[error_key]:
