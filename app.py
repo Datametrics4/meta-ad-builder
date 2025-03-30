@@ -42,6 +42,11 @@ st.markdown("""
         .spacer-between-ads {
             margin-bottom: 1.25rem;
         }
+        .h3-top-space {
+            margin-top: 2.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -66,7 +71,7 @@ primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
 if uploaded_files:
-    st.markdown("###  \n### 2. Ad Building")
+    st.markdown('<div class="h3-top-space">### 2. Ad Building</div>', unsafe_allow_html=True)
 
     for i, file in enumerate(uploaded_files):
         saved_key = f"saved_{i}"
