@@ -66,7 +66,7 @@ if uploaded_files:
     <h3>2. Ad Building</h3>
 """, unsafe_allow_html=True)
     for i, file in enumerate(uploaded_files):
-        with st.container():
+        if i > 0:
             st.markdown(f"<div class='ad-block'>", unsafe_allow_html=True)
 
             preview_col, form_col = st.columns([1.2, 2.8])
@@ -128,6 +128,7 @@ if uploaded_files:
                     "placements": placement
                 })
 
+            if i > 0:
             st.markdown("</div>", unsafe_allow_html=True)
 
 # --- Summary ---
