@@ -25,14 +25,10 @@ st.markdown("""
         .section-padding {
             padding-top: 2rem;
             margin-top: 2rem;
+            border-top: 1px solid #ddd;
         }
-        .section-title {
+        .section-title, .creative-title {
             font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        .creative-title {
-            font-size: 1.1rem;
             font-weight: bold;
             margin-bottom: 1rem;
         }
