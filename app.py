@@ -142,7 +142,7 @@ if uploaded_files:
                         st.session_state[error_key] = ""
                         st.session_state[show_expander_key] = False
                         st.session_state.rerun_toggle = not st.session_state.rerun_toggle
-                        st.experimental_rerun()
+                        st.rerun()
 
         if st.session_state[error_key]:
             st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
