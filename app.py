@@ -69,7 +69,7 @@ if uploaded_files:
         saved_key = f"saved_{i}"
         error_key = f"error_{i}"
         ad_name_key = f"ad_name_{i}"
-        visible_key = f"visible_{i}"
+        version_key = f"expander_version_{i}"
 
         if saved_key not in st.session_state:
             st.session_state[saved_key] = False
@@ -77,8 +77,8 @@ if uploaded_files:
             st.session_state[error_key] = ""
         if ad_name_key not in st.session_state:
             st.session_state[ad_name_key] = ""
-        if visible_key not in st.session_state:
-            st.session_state[visible_key] = True
+        if version_key not in st.session_state:
+            st.session_state[version_key] = 0
 
         today = datetime.date.today()
         month_prefix = today.strftime("%b")
@@ -88,59 +88,56 @@ if uploaded_files:
         else:
             expander_title = f"Creative #{i+1}: [Not Saved]"
 
-        if st.session_state[visible_key]:
-            with st.expander(expander_title, expanded=True):
-                preview_col, form_col = st.columns([1.2, 2.8])
-                with preview_col:
-                    if file.type.startswith("image"):
-                        st.image(file, use_column_width=True)
-                        st.markdown("**Image Hash:**")
-                    elif file.type.startswith("video"):
-                        st.video(file, format="video/mp4")
-                        st.markdown("**Meta Video ID:**")
+        with st.expander(expander_title, expanded=True):
+            preview_col, form_col = st.columns([1.2, 2.8])
+            with preview_col:
+                if file.type.startswith("image"):
+                    st.image(file, use_column_width=True)
+                    st.markdown("**Image Hash:**")
+                elif file.type.startswith("video"):
+                    st.video(file, format="video/mp4")
+                    st.markdown("**Meta Video ID:**")
 
-                with form_col:
-                    st.markdown("<div class='section-title'>Ad Naming</div>", unsafe_allow_html=True)
-                    format_type = st.selectbox("Format", formats, key=f"format_{i}")
-                    product = st.selectbox("Product", products, key=f"product_{i}")
-                    offer = st.selectbox("Offer", offers, key=f"offer_{i}")
-                    content_style = st.selectbox("Content Style", styles, key=f"style_{i}")
-                    person = st.selectbox("Person", persons, key=f"person_{i}")
-                    editor = st.selectbox("Editor", edits, key=f"editor_{i}")
-                    landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
-                    ad_id = st.text_input("Ad Identifier", key=f"adid_{i}")
+            with form_col:
+                st.markdown("<div class='section-title'>Ad Naming</div>", unsafe_allow_html=True)
+                format_type = st.selectbox("Format", formats, key=f"format_{i}")
+                product = st.selectbox("Product", products, key=f"product_{i}")
+                offer = st.selectbox("Offer", offers, key=f"offer_{i}")
+                content_style = st.selectbox("Content Style", styles, key=f"style_{i}")
+                person = st.selectbox("Person", persons, key=f"person_{i}")
+                editor = st.selectbox("Editor", edits, key=f"editor_{i}")
+                landing = st.selectbox("Landing Page", landings, key=f"landing_{i}")
+                ad_id = st.text_input("Ad Identifier", key=f"adid_{i}")
 
-                    ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
-                    st.markdown("**Generated Ad Name**")
-                    st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
+                ad_name = f"{month_prefix}_{format_type}_{product}_{offer}_{content_style}_{person}_{editor}_{landing}_{ad_id}"
+                st.markdown("**Generated Ad Name**")
+                st.markdown(f"<div class='generated-name'>{ad_name}</div>", unsafe_allow_html=True)
 
-                    st.markdown("<div class='section-title section-padding'>Ad Copy</div>", unsafe_allow_html=True)
-                    copy_length = st.selectbox("Copy Length", copy_lengths, key=f"copylen_{i}")
-                    primary_copy = st.selectbox("Primary Copy", primary_copy_options, key=f"primarycopy_{i}")
-                    headline = st.selectbox("Headline", headline_options, key=f"headline_{i}")
+                st.markdown("<div class='section-title section-padding'>Ad Copy</div>", unsafe_allow_html=True)
+                copy_length = st.selectbox("Copy Length", copy_lengths, key=f"copylen_{i}")
+                primary_copy = st.selectbox("Primary Copy", primary_copy_options, key=f"primarycopy_{i}")
+                headline = st.selectbox("Headline", headline_options, key=f"headline_{i}")
 
-                    st.markdown("<div class='section-title section-padding'>Ad Parameters</div>", unsafe_allow_html=True)
-                    cta = st.selectbox("Call to Action", cta_options, key=f"cta_{i}")
-                    destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
-                    placement = st.multiselect("Placements", [
-                        "Facebook Feed", "Instagram Feed", "Facebook Reels", "Instagram Reels",
-                        "Facebook Story", "Instagram Story", "Messenger Story", "Audience Network"
-                    ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
+                st.markdown("<div class='section-title section-padding'>Ad Parameters</div>", unsafe_allow_html=True)
+                cta = st.selectbox("Call to Action", cta_options, key=f"cta_{i}")
+                destination_url = st.text_input("Destination URL", value="https://nakie.co", key=f"url_{i}")
+                placement = st.multiselect("Placements", [
+                    "Facebook Feed", "Instagram Feed", "Facebook Reels", "Instagram Reels",
+                    "Facebook Story", "Instagram Story", "Messenger Story", "Audience Network"
+                ], default=["Facebook Feed", "Instagram Feed"], key=f"placements_{i}")
 
-                    col1, col2 = st.columns([1, 1])
-                    with col1:
-                        if st.button("✅ Save Ad", key=f"save_{i}"):
-                            if ad_id.strip() == "":
-                                st.session_state[error_key] = "Ad Identifier is required."
-                            else:
-                                st.session_state[saved_key] = True
-                                st.session_state[ad_name_key] = ad_name
-                                st.session_state[error_key] = ""
-                                st.rerun()
-                    with col2:
-                        if st.button("❌ Close Ad", key=f"close_{i}"):
-                            st.session_state[visible_key] = False
+                col1, col2 = st.columns([1, 1])
+                with col1:
+                    if st.button("✅ Save Ad", key=f"save_{i}"):
+                        if ad_id.strip() == "":
+                            st.session_state[error_key] = "Ad Identifier is required."
+                        else:
+                            st.session_state[saved_key] = True
+                            st.session_state[ad_name_key] = ad_name
+                            st.session_state[error_key] = ""
                             st.rerun()
+                with col2:
+                    st.markdown("<span style='font-size: 0.9rem; color: gray;'>Click the arrow to close this ad</span>", unsafe_allow_html=True)
 
         if st.session_state[error_key]:
             st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
