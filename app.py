@@ -10,7 +10,7 @@ st.markdown("""
             border: 1px solid #e1e1e1;
             border-radius: 10px;
             padding: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             background-color: #fafafa;
         }
         .generated-name {
@@ -20,20 +20,24 @@ st.markdown("""
             border-radius: 5px;
             font-weight: bold;
             font-size: 0.95rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .section-padding {
-            padding-top: 1.5rem;
-            margin-top: 1.5rem;
-            border-top: 1px solid #ddd;
+            padding-top: 2rem;
+            margin-top: 2rem;
         }
         .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .creative-title {
             font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
         video {
-            max-height: 240px;
+            max-height: 300px;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -64,16 +68,16 @@ if uploaded_files:
         with st.container():
             st.markdown(f"<div class='ad-block'>", unsafe_allow_html=True)
 
-            st.markdown(f"**Creative #{i+1}:**")
-            preview_col, form_col = st.columns([1, 3])
+            preview_col, form_col = st.columns([1.3, 2.7])
             with preview_col:
+                st.markdown(f"<div class='creative-title'>Creative #{i+1}:</div>", unsafe_allow_html=True)
                 if file.type.startswith("image"):
-                    st.image(file, width=120)
+                    st.image(file, width=160)
                 elif file.type.startswith("video"):
                     st.video(file, format="video/mp4")
 
             with form_col:
-                st.markdown("<div class='section-title section-padding'>Ad Naming</div>", unsafe_allow_html=True)
+                st.markdown("<div class='section-title'>Ad Naming</div>", unsafe_allow_html=True)
                 format_type = st.selectbox("Format", formats, key=f"format_{i}")
                 product = st.selectbox("Product", products, key=f"product_{i}")
                 offer = st.selectbox("Offer", offers, key=f"offer_{i}")
