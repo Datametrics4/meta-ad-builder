@@ -36,8 +36,9 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 1rem;
         }
-        video {
-            max-height: 300px;
+        video, img {
+            width: 100%;
+            height: auto;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -68,13 +69,15 @@ if uploaded_files:
         with st.container():
             st.markdown(f"<div class='ad-block'>", unsafe_allow_html=True)
 
-            preview_col, form_col = st.columns([1.3, 2.7])
+            preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
                 st.markdown(f"<div class='creative-title'>Creative #{i+1}:</div>", unsafe_allow_html=True)
                 if file.type.startswith("image"):
-                    st.image(file, width=160)
+                    st.image(file, use_column_width=True)
+                    st.markdown("**Image Hash:**")
                 elif file.type.startswith("video"):
                     st.video(file, format="video/mp4")
+                    st.markdown("**Meta Video ID:**")
 
             with form_col:
                 st.markdown("<div class='section-title'>Ad Naming</div>", unsafe_allow_html=True)
