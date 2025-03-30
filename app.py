@@ -90,7 +90,9 @@ if uploaded_files:
         else:
             expander_title = f"Creative #{i+1}: [Not Saved]"
 
-        with st.expander(expander_title, expanded=True, key=f"expander_{i}_{st.session_state[version_key]}"):
+        expander_key = f"expander_{i}_{str(st.session_state[version_key])}"
+
+        with st.expander(expander_title, expanded=True, key=expander_key):
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
                 if file.type.startswith("image"):
@@ -135,7 +137,7 @@ if uploaded_files:
                         st.session_state[saved_key] = True
                         st.session_state[ad_name_key] = ad_name
                         st.session_state[error_key] = ""
-                        st.session_state[version_key] += 1  # force expander to rerender closed
+                        st.session_state[version_key] += 1
                         st.rerun()
 
         if st.session_state[error_key]:
