@@ -39,9 +39,6 @@ st.markdown("""
             height: auto;
         }
         header .st-emotion-cache-18ni7ap.ezrtsby0 { display: none; }
-        .spacer-top-lg {
-            margin-top: 3.5rem;
-        }
         .spacer-between-ads {
             margin-bottom: 1.25rem;
         }
@@ -69,8 +66,7 @@ primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
 if uploaded_files:
-    st.markdown('<div class="spacer-top-lg"></div>', unsafe_allow_html=True)
-    st.markdown("### 2. Ad Building")
+    st.markdown("###  \n### 2. Ad Building")
 
     for i, file in enumerate(uploaded_files):
         saved_key = f"saved_{i}"
