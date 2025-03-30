@@ -62,8 +62,8 @@ headline_options = ["Headline A", "Headline B"]
 
 if uploaded_files:
     st.markdown("""
-    <div style='margin-top: 2.5rem'></div>
-    ### 2. Ad Building
+    <div style='margin-top: 4rem'></div>
+    <h3>2. Ad Building</h3>
 """, unsafe_allow_html=True)
     for i, file in enumerate(uploaded_files):
         with st.container():
