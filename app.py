@@ -66,7 +66,7 @@ primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
 if uploaded_files:
-    st.header("2. Ad Building")
+    st.markdown("### 2. Ad Building")
 
     for i, file in enumerate(uploaded_files):
         saved_key = f"saved_{i}"
