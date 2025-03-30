@@ -39,6 +39,12 @@ st.markdown("""
             height: auto;
         }
         header .st-emotion-cache-18ni7ap.ezrtsby0 { display: none; }
+        .spacer-top-lg {
+            margin-top: 3.5rem;
+        }
+        .spacer-between-ads {
+            margin-bottom: 1.25rem;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -63,6 +69,7 @@ primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
 if uploaded_files:
+    st.markdown('<div class="spacer-top-lg"></div>', unsafe_allow_html=True)
     st.markdown("### 2. Ad Building")
 
     for i, file in enumerate(uploaded_files):
@@ -93,7 +100,7 @@ if uploaded_files:
                 preview_col, form_col = st.columns([1.2, 2.8])
                 with preview_col:
                     if file.type.startswith("image"):
-                        st.image(file, use_column_width=True)
+                        st.image(file, use_container_width=True)
                         st.markdown("**Image Hash:**")
                     elif file.type.startswith("video"):
                         st.video(file, format="video/mp4")
@@ -142,4 +149,4 @@ if uploaded_files:
         if st.session_state[error_key]:
             st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
 
-        st.markdown("<div style='margin-bottom: 2.5rem;'></div>", unsafe_allow_html=True)
+        st.markdown('<div class="spacer-between-ads"></div>', unsafe_allow_html=True)
