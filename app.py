@@ -25,8 +25,8 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 1rem;
         }
-        .expander-title {
-            font-size: 1.25rem !important;
+        .st-expanderHeader {
+            font-size: 1.2rem !important;
             font-weight: bold !important;
         }
         .error-text {
@@ -70,24 +70,28 @@ if uploaded_files:
         saved_key = f"saved_{i}"
         error_key = f"error_{i}"
         ad_name_key = f"ad_name_{i}"
+        show_expander_key = f"show_expander_{i}"
 
+        # Init session state
         if saved_key not in st.session_state:
             st.session_state[saved_key] = False
         if error_key not in st.session_state:
             st.session_state[error_key] = ""
         if ad_name_key not in st.session_state:
             st.session_state[ad_name_key] = ""
+        if show_expander_key not in st.session_state:
+            st.session_state[show_expander_key] = True
 
         today = datetime.date.today()
         month_prefix = today.strftime("%b")
 
-        # Build dynamic label
+        # Build title
         if st.session_state[saved_key] and st.session_state[ad_name_key]:
-            label_title = f"<span class='expander-title'>Creative #{i+1}: {st.session_state[ad_name_key]}</span>"
+            expander_title = f"Creative #{i+1}: {st.session_state[ad_name_key]}"
         else:
-            label_title = f"<span class='expander-title'>Creative #{i+1}: [Not Saved]</span>"
+            expander_title = f"Creative #{i+1}: [Not Saved]"
 
-        with st.expander(label_title, expanded=not st.session_state.get(f"collapsed_{i}", False)):
+        with st.expander(expander_title, expanded=st.session_state[show_expander_key]):
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
                 if file.type.startswith("image"):
@@ -128,12 +132,13 @@ if uploaded_files:
                 if st.button("✅ Save Ad", key=f"save_{i}"):
                     if ad_id.strip() == "":
                         st.session_state[error_key] = "Ad Identifier is required."
+                        st.session_state[show_expander_key] = True
                     else:
                         st.session_state[saved_key] = True
                         st.session_state[ad_name_key] = ad_name
                         st.session_state[error_key] = ""
-                        st.session_state[f"collapsed_{i}"] = True
-                        st.rerun()
+                        st.session_state[show_expander_key] = False
+                    st.rerun()
 
         if st.session_state[error_key]:
             st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
