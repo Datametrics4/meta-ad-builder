@@ -61,7 +61,10 @@ primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
 if uploaded_files:
-    st.markdown("### 2. Build Ads Per Creative")
+    st.markdown("""
+    <div style='margin-top: 2.5rem'></div>
+    ### 2. Ad Building
+""", unsafe_allow_html=True)
     for i, file in enumerate(uploaded_files):
         with st.container():
             st.markdown(f"<div class='ad-block'>", unsafe_allow_html=True)
