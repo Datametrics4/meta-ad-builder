@@ -25,8 +25,8 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 1rem;
         }
-        .st-expanderHeader {
-            font-size: 1.2rem !important;
+        .st-expander > summary {
+            font-size: 1.25rem !important;
             font-weight: bold !important;
         }
         .error-text {
@@ -72,7 +72,6 @@ if uploaded_files:
         ad_name_key = f"ad_name_{i}"
         show_expander_key = f"show_expander_{i}"
 
-        # Init session state
         if saved_key not in st.session_state:
             st.session_state[saved_key] = False
         if error_key not in st.session_state:
@@ -137,7 +136,7 @@ if uploaded_files:
                         st.session_state[saved_key] = True
                         st.session_state[ad_name_key] = ad_name
                         st.session_state[error_key] = ""
-                        st.session_state[show_expander_key] = False
+                        st.session_state[show_expander_key] = False  # Always close
                     st.rerun()
 
         if st.session_state[error_key]:
