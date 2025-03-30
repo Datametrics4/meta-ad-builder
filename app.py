@@ -94,8 +94,6 @@ if uploaded_files:
         else:
             expander_title = f"Creative #{i+1}: [Not Saved]"
 
-        expander_key = f"expander_{i}_{str(st.session_state[version_key])}"
-
         with st.expander(expander_title, expanded=True):
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
@@ -146,7 +144,9 @@ if uploaded_files:
                             st.session_state[version_key] += 1
                             st.rerun()
                 with col2:
-                    st.markdown("<span style='font-size: 0.9rem; color: gray;'>Click the arrow to close this ad</span>", unsafe_allow_html=True)
+                    if st.button("❌ Close Ad", key=f"close_{i}"):
+                        st.session_state[version_key] += 1
+                        st.rerun()
 
         if st.session_state[error_key]:
             st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
