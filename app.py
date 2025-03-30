@@ -25,9 +25,9 @@ st.markdown("""
             font-weight: bold;
             margin-bottom: 1rem;
         }
-        .st-expander > summary {
-            font-size: 1.25rem !important;
-            font-weight: bold !important;
+        summary {
+            font-size: 1.3rem !important;
+            font-weight: 700 !important;
         }
         .error-text {
             color: red;
@@ -62,6 +62,10 @@ copy_lengths = ["Short", "Medium", "Long"]
 primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
+# Hidden rerun key to force expander collapse
+if "rerun_toggle" not in st.session_state:
+    st.session_state.rerun_toggle = False
+
 if uploaded_files:
     st.markdown("### 2. Ad Building")
 
@@ -84,7 +88,7 @@ if uploaded_files:
         today = datetime.date.today()
         month_prefix = today.strftime("%b")
 
-        # Build title
+        # Title text
         if st.session_state[saved_key] and st.session_state[ad_name_key]:
             expander_title = f"Creative #{i+1}: {st.session_state[ad_name_key]}"
         else:
@@ -136,8 +140,9 @@ if uploaded_files:
                         st.session_state[saved_key] = True
                         st.session_state[ad_name_key] = ad_name
                         st.session_state[error_key] = ""
-                        st.session_state[show_expander_key] = False  # Always close
-                    st.rerun()
+                        st.session_state[show_expander_key] = False
+                        st.session_state.rerun_toggle = not st.session_state.rerun_toggle
+                        st.experimental_rerun()
 
         if st.session_state[error_key]:
             st.markdown(f"<div class='error-text'>{st.session_state[error_key]}</div>", unsafe_allow_html=True)
