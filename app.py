@@ -62,28 +62,24 @@ copy_lengths = ["Short", "Medium", "Long"]
 primary_copy_options = ["Primary Copy A", "Primary Copy B"]
 headline_options = ["Headline A", "Headline B"]
 
-# Hidden rerun key to force expander collapse
-if "rerun_toggle" not in st.session_state:
-    st.session_state.rerun_toggle = False
-
 if uploaded_files:
     st.markdown("### 2. Ad Building")
 
     for i, file in enumerate(uploaded_files):
-        key_prefix = f"ad_{i}"
         saved_key = f"saved_{i}"
         error_key = f"error_{i}"
         ad_name_key = f"ad_name_{i}"
-        show_expander_key = f"show_expander_{i}"
+        version_key = f"expander_version_{i}"
 
+        # Initialize state
         if saved_key not in st.session_state:
             st.session_state[saved_key] = False
         if error_key not in st.session_state:
             st.session_state[error_key] = ""
         if ad_name_key not in st.session_state:
             st.session_state[ad_name_key] = ""
-        if show_expander_key not in st.session_state:
-            st.session_state[show_expander_key] = True
+        if version_key not in st.session_state:
+            st.session_state[version_key] = 0
 
         today = datetime.date.today()
         month_prefix = today.strftime("%b")
@@ -94,7 +90,7 @@ if uploaded_files:
         else:
             expander_title = f"Creative #{i+1}: [Not Saved]"
 
-        with st.expander(expander_title, expanded=st.session_state[show_expander_key]):
+        with st.expander(expander_title, expanded=True, key=f"expander_{i}_{st.session_state[version_key]}"):
             preview_col, form_col = st.columns([1.2, 2.8])
             with preview_col:
                 if file.type.startswith("image"):
@@ -135,13 +131,11 @@ if uploaded_files:
                 if st.button("✅ Save Ad", key=f"save_{i}"):
                     if ad_id.strip() == "":
                         st.session_state[error_key] = "Ad Identifier is required."
-                        st.session_state[show_expander_key] = True
                     else:
                         st.session_state[saved_key] = True
                         st.session_state[ad_name_key] = ad_name
                         st.session_state[error_key] = ""
-                        st.session_state[show_expander_key] = False
-                        st.session_state.rerun_toggle = not st.session_state.rerun_toggle
+                        st.session_state[version_key] += 1  # force expander to rerender closed
                         st.rerun()
 
         if st.session_state[error_key]:
