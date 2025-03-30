@@ -2,7 +2,7 @@ import streamlit as st
 import datetime
 
 st.set_page_config(page_title="Meta Ad Builder", layout="wide")
-st.title("📣 Meta Ad Builder - Row by Row")
+st.title("Meta Ad Builder")
 
 st.markdown("""
     <style>
@@ -36,6 +36,7 @@ st.markdown("""
             width: 100%;
             height: auto;
         }
+        header .st-emotion-cache-18ni7ap.ezrtsby0 { display: none; }
     </style>
 """, unsafe_allow_html=True)
 
